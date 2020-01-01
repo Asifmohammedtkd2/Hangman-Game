@@ -1,4 +1,4 @@
-from hangman import get_secret_word,get_hide_word,get_correct_word,letters_alphabets
+from hangman import get_secret_word,get_hide_word,get_correct_word,status_message,play
 
 def test_secret_word_no_punctuation():
     with open("/tmp/words.txt","w") as f:
@@ -74,18 +74,40 @@ def test_guess_wrong_duplicate_letters():
 def test_letters_guess_digit():
     secret_word="elephant"
     wrong_word=""
-    guess=["1"]
-    assert letters_alphabets(secret_word,wrong_word,guess) == ["--------",1]
-def test_letters_guess_two_digit():
-    secret_word="elephant"
-    wrong_word=""
-    guess=["1","6"]
-    assert letters_alphabets(secret_word,wrong_word,guess) == ["--------",2]
+    list_guess=[]
+    guess="1"
+    assert play(secret_word,wrong_word,list_guess,guess) == ['invalid option', '']
+def test_status():
+     secret_word="elephant"
+     guess=[]
+     assert status_message(secret_word,guess) == '     Word :--------'
 def test_correct_guess_letter():
     secret_word="elephant"
     wrong_word=""
+    list_guess=[]
     guess=["t"]
-    assert letters_alphabets(secret_word,wrong_word,guess) == ["-------t",0]
+    assert play(secret_word,wrong_word,list_guess,guess) == ['    Word :-------t    turn left :4', [], ['t'], '']
+   
+def test_same_guess_letter():
+    secret_word="elephant"
+    wrong_word=""
+    list_guess=["e"]
+    guess="e"
+    assert play(secret_word,wrong_word,list_guess,guess) == ['Already guessed', '']
+def test_guess_two_letter():
+    secret_word="elephant"
+    wrong_word=""
+    list_guess=[]
+    guess="el"
+    print(guess)
+    assert play(secret_word,wrong_word,list_guess,guess) == ['invalid option', '']
+    
+def test_winner():
+    secret_word="elephant"
+    wrong_word=""
+    list_guess=["e","l","p","h","n","a",]
+    guess="t"
+    assert play(secret_word,wrong_word,list_guess,guess) == ['You win', "a""b""x""z"]
 
     
 

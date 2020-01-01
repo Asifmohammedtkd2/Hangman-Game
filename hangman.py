@@ -31,7 +31,7 @@ def get_hide_word(secret_word,guess):
 def get_correct_word(secret_word,correct_word,wrong_word,guess):
     hide_word=get_hide_word(secret_word,guess)
     list_wrong_word=[]
-    list_correct_word=[]
+    list_correct_word=[]    
     for i in guess:
         if i in secret_word and i not in list_correct_word:
             list_correct_word.append(i)
@@ -39,51 +39,48 @@ def get_correct_word(secret_word,correct_word,wrong_word,guess):
             list_wrong_word.append(i)
     return [hide_word,list_correct_word,list_wrong_word]
 
-def letters_alphabets(secret_word,wrong_word,guess):
-    if str(guess).isdigit()==False:
-        alphabets=get_correct_word(secret_word,"","",guess)
+def status_message(secret_word, guess):
+    guess=[]
+    mask_word=get_hide_word(secret_word,guess)
+    status_message="""{}{}""".format("     Word :", mask_word)
+    return status_message
+def play(secret_word,wrong_word,list_guess,guess):
+    if len(guess)<2 and str(guess).isdigit()==False:
+        if guess not in list_guess:
+            for i in guess:
+                list_guess.append(i)
+                guess=list_guess
+                guess_Str = ''.join(map(str, list_guess))
+                mask_word=get_correct_word(secret_word,"","",guess)
+                if mask_word[0] == secret_word:
+                    s="You win"
+                    return [s,"a""b""x""z"]
+                else:
+                    mask="""{}{}{}{}""".format("    Word :",mask_word[0],"    turn left :",4-len(mask_word[2]))
+                    return [mask,mask_word[2],list_guess,""]
+        else:
+            s="Already guessed"
     else:
-        print("Invalid Input")
-   
-    chance=len(alphabets[2])
-    return [alphabets[0],chance]
+        s="invalid option"
+    return [s,""]
+    
 
 if __name__ == "__main__":
-    p=0
     k=0
     secret_word=get_secret_word(word_file="/usr/share/dict/words")
-    print("\n\t\t GAME START... ")
     list_guess=[]
-    while True:
-        
-        if p==0:
-            guess=[]
-            get_hide_word(secret_word,guess)
-            hide_word=get_hide_word(secret_word,guess)
-            print(end="\n")
-            print("{}{}".format("    Word :",hide_word))
-            p=p+1
-            
-        elif p>0 and k<3:
-            print(secret_word)
+    print(secret_word)
+    status=status_message(secret_word,[])
+    print(status)
+    while True:             
+         if  k<5:
             print("    Guess :",end="")
             guess=input()
-            if len(guess)<2:
-                if guess not in list_guess:
-                     for i in guess:
-                         list_guess.append(i)    
-                     guess=list_guess
-                     hide_word=letters_alphabets(secret_word,"",guess)
-                     print("{}{}".format("    Word :",hide_word[0]))
-                     k=hide_word[1]
-                     if secret_word == hide_word[0]:
-                         
-                         break                
-                else:
-                    print("Already Guessed")
-            else:
-                print("Only single letter")
-            
+            h=play(secret_word,"",list_guess,guess)
+            print(h[0])
+            k=len(h[1])
+            k=k+1
+
       
          
 
